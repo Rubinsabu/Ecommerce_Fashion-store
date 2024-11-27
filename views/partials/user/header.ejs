@@ -7,7 +7,7 @@
     <meta name="keywords" content="Male_Fashion, unica, creative, html">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <title>Male-Fashion | Template</title>
+    <title>Mens-Side</title>
 
     <!-- Google Font -->
     <link href="https://fonts.googleapis.com/css2?family=Nunito+Sans:wght@300;400;600;700;800;900&display=swap"
@@ -22,6 +22,18 @@
     <link rel="stylesheet" href="css/owl.carousel.min.css" type="text/css">
     <link rel="stylesheet" href="css/slicknav.min.css" type="text/css">
     <link rel="stylesheet" href="css/style.css" type="text/css">
+    <style>
+        .header__nav__option .sign-in-link {
+            font-size: 16px;
+            color: #333;
+            margin-right: 15px;
+            text-decoration: none;
+            font-weight: 600;
+        }
+        .header__nav__option .sign-in-link:hover {
+            color: #ff7f50;
+        }
+    </style>
 </head>
 
 <body>
@@ -31,7 +43,7 @@
     </div>
 
     <!-- Offcanvas Menu Begin -->
-    <div class="offcanvas-menu-overlay"></div>
+    <!-- <div class="offcanvas-menu-overlay"></div>
     <div class="offcanvas-menu-wrapper">
         <div class="offcanvas__option">
             <div class="offcanvas__links">
@@ -57,14 +69,14 @@
         <div class="offcanvas__text">
             <p>Free shipping, 30-day return or refund guarantee.</p>
         </div>
-    </div>
+    </div> -->
     <!-- Offcanvas Menu End -->
 
     <!-- Header Section Begin -->
     <header class="header">
         <div class="header__top">
             <div class="container">
-                <div class="row">
+                <!-- <div class="row">
                     <div class="col-lg-6 col-md-7">
                         <div class="header__top__left">
                             <p>Free shipping, 30-day return or refund guarantee.</p>
@@ -86,7 +98,7 @@
                             </div>
                         </div>
                     </div>
-                </div>
+                </div> -->
             </div>
         </div>
         <div class="container">
@@ -110,17 +122,22 @@
                                     <li><a href="./blog-details.html">Blog Details</a></li>
                                 </ul>
                             </li>
-                            <li><a href="./blog.html">Blog</a></li>
-                            <li><a href="./contact.html">Contacts</a></li>
+                            <!-- <li><a href="./blog.html">Signup</a></li>
+                            <li><a href="./contact.html">Login</a></li> -->
                         </ul>
+                        
                     </nav>
+                    
                 </div>
                 <div class="col-lg-3 col-md-3">
-                    <div class="header__nav__option">
+                    
+                    <div class="header__nav__option d-flex align-items-center justify-content-between">
+                        <a href="/signup" class="sign-in-link">Signup</a>
+                        <a href="/login" class="sign-in-link">Login</a>
                         <a href="#" class="search-switch"><img src="img/icon/search.png" alt=""></a>
                         <a href="#"><img src="img/icon/heart.png" alt=""></a>
-                        <a href="#"><img src="img/icon/cart.png" alt=""> <span>0</span></a>
-                        <div class="price">$0.00</div>
+                        <a href="#" class="cart-link d-flex align-items-center"><img src="img/icon/cart.png" alt=""> <span>0</span></a>
+                        <a class="price">$0.00</a>
                     </div>
                 </div>
             </div>

@@ -1,0 +1,285 @@
+<!DOCTYPE html>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Signup Page</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: Arial, sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            background-color: #f8f9fa;
+        }
+
+        .container {
+            display: flex;
+            width: 80%;
+            max-width: 1200px;
+            background: #fff;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+            border-radius: 8px;
+            overflow: hidden;
+        }
+
+        .form-section {
+            flex: 1;
+            padding: 40px;
+        }
+
+        .form-section h1 {
+            margin-bottom: 20px;
+            font-size: 28px;
+            color: #333;
+        }
+
+        .form-section p {
+            margin-bottom: 30px;
+            color: #777;
+            font-size: 14px;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-size: 14px;
+            color: #555;
+        }
+
+        .form-group input {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            font-size: 14px;
+            outline: none;
+        }
+
+        .form-group input:focus {
+            border-color: #007bff;
+        }
+
+        .btn {
+            display: block;
+            width: 100%;
+            padding: 10px;
+            background-color: #007bff;
+            color: #fff;
+            border: none;
+            border-radius: 5px;
+            font-size: 16px;
+            cursor: pointer;
+            text-align: center;
+            margin-bottom: 15px;
+        }
+
+        .btn:hover {
+            background-color: #0056b3;
+        }
+
+        .google-btn {
+            background-color: #db4437;
+        }
+
+        .google-btn:hover {
+            background-color: #c23321;
+        }
+
+        .image-section {
+            flex: 1;
+            background: url('https://via.placeholder.com/600x600') no-repeat center center/cover;
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                flex-direction: column;
+            }
+
+            .image-section {
+                height: 200px;
+            }
+        }
+        .error-message{
+            color:red;
+            font-size: 0.75rem;
+            display: none;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Form Section -->
+        <div class="form-section">
+            <h1>Signup for Shopping</h1>
+            <p>Create an account to access exclusive shopping deals and more.</p>
+            
+            <form action="/signup" method="POST" id="signform">
+                <div class="form-group">
+                    <label for="fullname">Full Name</label>
+                    <input type="text" id="name" name="name" placeholder="Enter your full name" required>
+                    <div id="error1" class="error-message"></div>
+                </div>
+                <div class="form-group">
+                    <label for="email">Email</label>
+                    <input type="email" id="email" name="email" placeholder="Enter your email" required>
+                    <div id="error2" class="error-message"></div>
+                </div>
+                <div class="form-group">
+                    <label for="phone">Phone Number</label>
+                    <input type="tel" id="phone" name="phone" placeholder="Enter your phone number" required>
+                    <div id="error3" class="error-message"></div>
+                </div>
+                <div class="form-group">
+                    <label for="password">Password</label>
+                    <input type="password" id="password" name="password" placeholder="Enter your password" required>
+                    <div id="error4" class="error-message"></div>
+                </div>
+                <div class="form-group">
+                    <label for="confirm-password">Confirm Password</label>
+                    <input type="password" id="confirm-password" name="cPassword" placeholder="Confirm your password" required>
+                    <div id="error5" class="error-message"></div>
+                </div>
+                <button type="submit" class="btn">Sign Up</button>
+                <button type="button" class="btn google-btn">Sign in with Google</button>
+            </form>
+        </div>
+
+        <!-- Image Section -->
+        <div class="image-section"></div>
+    </div>
+</body>
+</html>
+
+<script>
+
+    const nameid = document.getElementById("name");
+    const emailid = document.getElementById("email");
+    const phoneid = document.getElementById("phone");
+    const passid = document.getElementById("password");
+    const cpassid = document.getElementById("confirm-password");
+    const error1 = document.getElementById("error1");
+    const error2 = document.getElementById("error2");
+    const error3 = document.getElementById("error3")
+    const error4 = document.getElementById("error4");
+    const error5 = document.getElementById("error5");
+    const signform = document.getElementById("signform");
+
+    function nameValidateChecking (e){
+
+        const nameval = nameid.value;
+        const namepattern = /^[A-Za-z\s]+$/;
+
+        if(nameval.trim()==''){
+            error1.style.display='block';
+            error1.innerHTML="Please enter a valid name";
+            return false;
+        }else if(!namepattern.test(nameval)){
+            error1.style.display='block';
+            error1.innerHTML="Name can only contain alphabets and spaces";
+            return false;
+        }else{
+            error1.style.display='none';
+            error1.innerHTML='';
+            return true;
+        }
+    }
+
+    function emailValidateChecking(e){
+
+        const emailval = emailid.value;
+        const emailpattern = /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,4}$/;
+
+        if(!emailpattern.test(emailval)){
+            error2.style.display="block";
+            error2.innerHTML="Invalid Format";
+            return false;
+        }else{
+            error2.style.display="none";
+            error2.innerHTML='';
+            return true;
+        }
+    }
+
+    function phoneValidateChecking(e){
+       const phoneval = phoneid.value;
+       if(phoneval.trim()===''){
+         error3.style.display="block";
+         error3.innerHTML="Enter valid phone number";
+         return false;
+       }else if(phoneval.length<10 || phoneval.length>10){
+         error3.style.display="block";
+         error3.innerHTML="Enter 10 digit phone number";
+         return false;
+       }else{
+        error3.style.display='none';
+        error3.innerHTML='';
+        return true;
+       }
+    }
+
+    function passValidateChecking(){
+        const passval = passid.value;
+        const cpassval = cpassid.value;
+        const alpha = /[a-zA-Z]/;
+        const digit = /\d/;
+        if(passval.length<8){
+            error4.style.display='block';
+            error4.innerHTML='Shoud contain atleast 8 characters';
+            return false;
+        }else if(!alpha.test(passval) || !digit.test(passval)){
+            error4.style.display='block';
+            error4.innerHTML='Should contain numbers and alphabets';
+            return false;
+        }else if(passval !== cpassval){
+            error5.style.display='block';
+            error5.innerHTML='Passwords do not match';
+            return false;
+        }else{
+            error5.style.display='none';
+            error5.innerHTML='';
+            return true;
+        }
+    }
+
+    document.addEventListener("DOMContentLoaded",function(){
+        signform.addEventListener("submit",function(e){
+
+            const isNameValid = nameValidateChecking();
+            const isEmailValid = emailValidateChecking();
+            const isPhoneValid = phoneValidateChecking();
+            const isPasswordValid = passValidateChecking();
+
+            if (!isNameValid || !isEmailValid || !isPhoneValid || !isPasswordValid) {
+            e.preventDefault(); // Prevent form submission
+            }
+
+            if( !nameid || !emailid || !phoneid 
+                || !passid || !error1 ||
+                !error2 || !error3 || !error4 ||
+                !error5 || !signform
+            ){
+                console.error("One or more elements not found");
+            }
+            if( error1.innerHTML || 
+                error2.innerHTML ||
+                error3.innerHTML ||
+                error4.innerHTML ||
+                error5.innerHTML 
+            ){
+                e.preventDefault();
+            }
+        });
+    });
+</script>
+
