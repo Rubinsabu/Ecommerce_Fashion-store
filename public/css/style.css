@@ -404,7 +404,8 @@ ol {
 }
 
 .header__logo {
-	padding: 30px 0;
+	width : 75%;
+	padding: 20px 0 10px 0;
 }
 
 .header__logo a {
