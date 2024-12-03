@@ -33,6 +33,36 @@
         .header__nav__option .sign-in-link:hover {
             color: #ff7f50;
         }
+        .dropdown {
+            position: relative;
+            display: inline-block;
+        }
+        .dropdown-content {
+            display: none;
+            position: absolute;
+            background-color: white;
+            min-width: 160px;
+            box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+            z-index:1000;
+            right:0;
+        }
+        .dropdown-content a{
+            color: black;
+            padding: 12px 16px;
+            text-decoration: none;
+            display: block;
+            width: 100%;
+        }
+        .dropdown-content a:hover{
+            background-color: #f1f1f1;
+        }
+        .dropdown:hover .dropdown-content{
+            display: block;
+        }
+        .header{
+            position: relative;
+            z-index: 500;
+        }
     </style>
 </head>
 
@@ -132,8 +162,19 @@
                 <div class="col-lg-3 col-md-3">
                     
                     <div class="header__nav__option d-flex align-items-center justify-content-between">
+                        <% console.log("User in Header:", user); %>
+                        <% if(user){%>
+                            <div class="dropdown">
+                                <a href="#" class="sign-in-link"><%= user.name %></a>
+                                <div class="dropdown-content">
+                                    <a href="/userProfile">Profile</a>
+                                    <a href="/logout">Logout</a>
+                                </div>
+                            </div>
+                        <% }else{%>
                         <a href="/signup" class="sign-in-link">Signup</a>
                         <a href="/login" class="sign-in-link">Login</a>
+                        <% } %>
                         <a href="#" class="search-switch"><img src="img/icon/search.png" alt=""></a>
                         <a href="#"><img src="img/icon/heart.png" alt=""></a>
                         <a href="#" class="cart-link d-flex align-items-center"><img src="img/icon/cart.png" alt=""> <span>0</span></a>

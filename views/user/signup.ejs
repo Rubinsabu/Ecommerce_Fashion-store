@@ -135,12 +135,6 @@
         <div class="form-section">
             <h1>Signup for Shopping</h1>
             <p>Create an account to access exclusive shopping deals and more.</p>
-
-            <% if (typeof message !== 'undefined' && message) { %>
-                <div class="custom-alert">
-                    <%= message %>
-                </div>
-            <% } %>
             
             <form action="/signup" method="POST" id="signform">
                 <div class="form-group">
@@ -168,6 +162,11 @@
                     <input type="password" id="confirm-password" name="cPassword" placeholder="Confirm your password" required>
                     <div id="error5" class="error-message"></div>
                 </div>
+                <% if (typeof message !== 'undefined' && message) { %>
+                    <div class="custom-alert">
+                        <%= message %>
+                    </div>
+                <% } %>
                 <button type="submit" class="btn">Sign Up</button>
                 <a href="/auth/google" class="btn google-btn">Sign in with Google</a>
             </form>
