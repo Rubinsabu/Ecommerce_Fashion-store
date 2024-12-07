@@ -27,6 +27,11 @@
             box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
             border-radius: 8px;
             overflow: hidden;
+            /* display: flex;
+            flex-wrap: wrap;  Allow wrapping for small devices 
+             width: 100%;  Ensure it spans full width 
+             height: auto; Let it adjust based on content   */
+
         }
 
         .form-section {
@@ -98,17 +103,24 @@
         }
 
         .image-section {
+            
             flex: 1;
-            background: url('https://via.placeholder.com/600x600') no-repeat center center/cover;
+            background-image: url('/img/signup_bg.jpg'); /* Set the image */
+            background-repeat: no-repeat; /* Prevent repeating */
+            background-position: top center; /* Center the image both horizontally and vertically */
+            background-size: cover; /* Ensure the image fully covers the container */
+            width: 100%; /* Full width of the container */
+            height: 100vh; /* Use 100% of the viewport height */
+            min-height: 400px; /* Ensures a minimum height */
+            overflow: hidden; /* Prevent content overflow */
         }
 
         @media (max-width: 768px) {
-            .container {
-                flex-direction: column;
-            }
-
+          
             .image-section {
-                height: 200px;
+                /* height: 200px; */
+                height: 250px; /* Adjust the height for smaller screens */
+                background-size: cover; /* Cover the container for smaller devices */
             }
         }
         .error-message{
@@ -173,7 +185,8 @@
         </div>
 
         <!-- Image Section -->
-        <div class="image-section"></div>
+        <div class="image-section">
+        </div>
     </div>
 </body>
 </html>
