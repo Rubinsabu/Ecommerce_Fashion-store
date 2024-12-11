@@ -2,7 +2,7 @@ const mongoose = require("mongoose");
 const {Schema} = mongoose;
 
 const productSchema = new Schema({
-    ProductName : {
+    productName : {
         type: String,
         required: true,
     },
@@ -33,8 +33,12 @@ const productSchema = new Schema({
     },
     quantity: {
         type: Number,
-        default: true
+        default: 1
     },
+    // size:{
+    //     type:String,
+    //     required: true,
+    // },
     color:{
         type:String,
         required: true
