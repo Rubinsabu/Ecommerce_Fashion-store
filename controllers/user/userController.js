@@ -17,18 +17,19 @@ const pageNotFound = async(req,res)=>{
 const loadHomepage = async(req,res)=>{
 
     try{
-        // console.log("Session User at Homepage:", req.session.user);
-        // const categories = await Category.find({isListed:true});
-        // const productData = await Product.find(
-        //     {isBlocked:false,
-        //      category:{$in:categories.map(category=>category._id)},quantity:{$gt:0}
-        //     });
+        console.log("Session User at Homepage:", req.session.user);
 
-        // productData.sort((a,b)=>new Date(b.createdOn)-new Date(a.createdOn));
-        // productData = productData.slice(0,4);
+        const categories = await Category.find({isListed:true});
+        let productData = await Product.find(
+            {isBlocked:false,
+             category:{$in:categories.map(category=>category._id)},quantity:{$gt:0}
+            });
 
-        // res.render('home',{products: productData});
-        res.render('home');
+        productData.sort((a,b)=>new Date(b.createdOn)-new Date(a.createdOn));
+        productData = productData.slice(0,4);
+
+        res.render('home',{products:productData});
+        // res.render('home');
         
     }catch(error){
         console.log("Home page not found");
