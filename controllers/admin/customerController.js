@@ -32,12 +32,13 @@ const customerInfo = async (req,res)=>{
 
         const totalPages= Math.ceil(count/limit);
 
+        console.log("customers loading");
         res.render('customers',{
             data: userData,
             totalPages: totalPages,
             currentPage: page,
         });
-
+        
     } catch (error) {
         console.error(error);
         res.status(500).send('Internal Server Error');
@@ -48,7 +49,10 @@ const customerBlocked = async(req,res)=>{
     try {
         let id=req.query.id;
         await User.updateOne({_id:id},{$set:{isBlocked:true}});
+        console.log("user blocked");
+        delete req.session.user;
         res.redirect("/admin/users");
+        console.log("admin user page loaded");
     } catch (error) {
         res.redirect("/pageerror");
     }
@@ -67,5 +71,6 @@ const customerunBlocked = async(req,res)=>{
 module.exports={
     customerInfo,
     customerBlocked,
-    customerunBlocked
+    customerunBlocked,
+
 }

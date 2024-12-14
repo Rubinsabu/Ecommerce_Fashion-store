@@ -260,6 +260,30 @@ const logout = async (req,res) =>{
     }
 }
 
+// const checkUserBlocked = async (req, res, next) => {
+//     console.log("check user block started..");
+//     if (req.session.user) {
+//         try {
+//             const user = await User.findById(req.session.user._id);
+//             if (user && user.isBlocked) {
+//                 console.log("session destroy going to happen");
+//                 delete req.session.user;
+//                     console.log("session destroy done");
+//                     res.redirect('/');
+//                     console.log('Home page loaded');
+//                     next();
+//                 }else {
+//                     next(); 
+//                 };
+               
+//         } catch (error) {
+//             console.error("Error checking blocked status:", error.message);
+//             return res.status(500).redirect('/pageNotFound'); 
+//         }
+//     } else {
+//         next(); 
+//     }
+//  };
 module.exports = {
     loadHomepage,
     pageNotFound,
@@ -271,4 +295,5 @@ module.exports = {
     loadLogin,
     login,
     logout,
+    checkUserBlocked,
 }
