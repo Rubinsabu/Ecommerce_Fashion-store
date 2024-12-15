@@ -2,6 +2,7 @@
 const User = require("../../models/userSchema");
 const Category = require("../../models/categorySchema");
 const Product = require("../../models/productSchema");
+const Brand = require('../../models/brandSchema');
 const nodemailer = require("nodemailer");
 const env = require("dotenv").config();
 const bcrypt = require("bcrypt");
@@ -285,6 +286,47 @@ const logout = async (req,res) =>{
 //         next(); 
 //     }
 //  };
+
+const loadShoppingPage = async(req,res)=>{
+    try {
+        const user = req.session.user;
+        const userData = await User.findOne({_id:user});
+        const categories = await Category.find({isListed:true});
+        const categoryIds = categories.map((category)=>category._id.toString());
+
+        const page = parseInt(req.query.page) || 1;
+        const limit = 9;
+        const skip = (page-1)*limit;
+        const products = await Product.find({
+            isBlocked: false,
+            category:{$in:categoryIds},
+            quantity:{$gt:0},
+        }).sort({createdOn:-1}).skip(skip).limit(limit);
+
+        const totalProducts = await Product.countDocuments({
+            isBlocked: false,
+            category:{$in:categoryIds},
+            quantity:{$gt:0},
+        })
+        const totalPages = Math.ceil(totalProducts/limit);
+
+        const brands = await Brand.find({isBlocked:false});
+        const categoriesWithIds = categories.map(category=>({_id:category._id,name:category.name}));
+
+        res.render('shop',{
+            user:userData,
+            products:products,
+            category:categoriesWithIds,
+            brand: brands,
+            totalProducts: totalProducts,
+            currentPage: page,
+            totalPages: totalPages
+        });
+
+    } catch (error) {
+        res.redirect('/pageNotFound');
+    }
+}
 module.exports = {
     loadHomepage,
     pageNotFound,
@@ -297,4 +339,5 @@ module.exports = {
     login,
     logout,
     //checkUserBlocked,
+    loadShoppingPage,
 }
