@@ -1,7 +1,9 @@
 const express = require("express");
 const router = express.Router();
 const userController = require("../controllers/user/userController");
+const profileController = require('../controllers/user/profileController');
 const passport = require("passport");
+const { userAuth } = require("../middlewares/auth");
 
 
 router.get('/pageNotFound',userController.pageNotFound);
@@ -23,9 +25,9 @@ router.get('/auth/google/callback',passport.authenticate('google',{failureRedire
 });
 router.get('/login',userController.loadLogin);
 router.post('/login',userController.login);
-
 router.get('/logout',userController.logout);
 
+router.get("/userProfile",userAuth,profileController.userProfile);
 
 
 

@@ -266,12 +266,13 @@ const logout = async (req,res) =>{
 //         try {
 //             const user = await User.findById(req.session.user._id);
 //             if (user && user.isBlocked) {
-//                 console.log("session destroy going to happen");
-//                 delete req.session.user;
-//                     console.log("session destroy done");
-//                     res.redirect('/');
-//                     console.log('Home page loaded');
-//                     next();
+//                 req.session.destroy((err)=>{
+        //              if(err){
+        //                  console.log("Session destruction error",err.message);
+        //                  return res.redirect('/pageNotFound');
+        //              }
+        //     return res.redirect("/login")
+        //        })
 //                 }else {
 //                     next(); 
 //                 };
@@ -295,5 +296,5 @@ module.exports = {
     loadLogin,
     login,
     logout,
-    checkUserBlocked,
+    //checkUserBlocked,
 }
