@@ -11,6 +11,7 @@ router.get('/pageNotFound',userController.pageNotFound);
 //router.use(['/', '/login'],userController.checkUserBlocked);
 router.get('/',userController.loadHomepage);
 router.get('/shop',userAuth,userController.loadShoppingPage);
+router.get('/filter',userAuth,userController.filterProduct)
 
 router.get('/signup',userController.loadSignup);
 router.post('/signup',userController.signup);

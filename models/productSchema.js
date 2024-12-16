@@ -11,6 +11,7 @@ const productSchema = new Schema({
         required: true,
     },
     brand:{
+        type: mongoose.Schema.Types.ObjectId,
         type: String,
         required: true
     },

@@ -263,7 +263,7 @@
            <ul>
                 <%for(let i=0;i<category.length;i++){ %>
                <li class="filter-item">
-                 <a href=""><%=category[i].name %></a>
+                 <a href="/filter?category=<%=category[i]._id%>"><%=category[i].name %></a>
                </li>
                <% } %>
            </ul>
@@ -278,7 +278,7 @@
            <ul>
             <%for(let i=0;i<brand.length;i++){ %>
                <li class="filter-item">
-                 <a href=""><%=brand[i].brandName %></a>
+                 <a href="/filter?brand=<%=brand[i]._id%>"><%=brand[i].brandName %></a>
                </li>
                <% } %>
            </ul>

@@ -19,6 +19,14 @@
 
 
        }
+       .remove-icon {
+    cursor: pointer;              
+    font-size: 16px;              
+    color: red;                  
+    margin-left: 10px;           
+    font-weight: bold;            
+    position: relative;           
+}
 </style>
    <section class="content-main">
        <div class="row">
@@ -271,11 +279,11 @@
     document.getElementById("input1").addEventListener("change",handleFileSelect);
 
     function handleFileSelect(event){
-        const addedImagesContainer = document.getElementById("addedImageContainer");
+        const addedImagesContainer = document.getElementById("addedImagesContainer");
         addedImagesContainer.innerHTML = "";
         const files = event.target.files;
 
-        for(let i=0;i<file.length;i++){
+        for(let i=0;i<files.length;i++){
             const file = files[i];
             selectedImages.push(file);
             const thumbnail = document.createElement("div");
