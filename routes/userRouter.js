@@ -13,6 +13,8 @@ router.get('/',userController.loadHomepage);
 router.get('/shop',userAuth,userController.loadShoppingPage);
 router.get('/filter',userAuth,userController.filterProduct)
 router.get('/filterPrice',userAuth,userController.filterByPrice);
+router.post('/search',userAuth,userController.searchProducts);
+router.get('/search',userAuth,userController.searchProducts);
 
 router.get('/signup',userController.loadSignup);
 router.post('/signup',userController.signup);

@@ -432,6 +432,57 @@ const filterByPrice = async(req,res) =>{
     }
 }
 
+const searchProducts = async(req,res)=>{
+    try {
+        const user = req.session.user;
+        const userData = await User.findOne({_id:user});
+        let search = req.body.query;
+
+        const brands = await Brand.find({}).lean();
+        const categories = await Category. find ({isListed: true}).lean();
+        const categoryIds = categories.map(category=>category._id.toString());
+        let searchResult = [];
+        if(req.session.filteredProducts && req.session.filteredProducts.length>0){
+            searchResult = req.session.filteredProducts.filter(product=> 
+                product.productName.toLowerCase().includes(search.toLowerCase()))
+        }
+        else{
+            searchResult = await Product.find({
+                /*productName: {$regex:".*"+search+".*",$options:"i"}, */
+                $or: [
+                    { productName: { $regex: ".*" + search + ".*", $options: "i" } }, 
+                    { color: { $regex: ".*" + search + ".*", $options: "i" } }       
+                ],
+                isBlocked:false,
+                quantity:{$gt:0},
+                category:{$in:categoryIds}
+            })
+        }
+        searchResult.sort((a,b)=>new Date(b.createdOn)-new Date(a.createdOn));
+
+        let itemsPerPage=6;
+        let currentPage = parseInt(req.query.page)|| 1;
+        let startIndex = (currentPage-1)*itemsPerPage;
+        let endIndex = startIndex + itemsPerPage;
+        let totalPages= Math.ceil(searchResult.length/itemsPerPage);
+        const currentProduct = searchResult.slice(startIndex,endIndex);
+
+        res.render("shop",{
+            user: userData,
+            products: currentProduct,
+            category: categories,
+            brand: brands,
+            totalPages,
+            currentPage,
+            count : searchResult.length,
+        })
+
+    } catch (error) {
+        console.log("Error:",error);
+        res.redirect('/pageNotFound');
+    }
+}
+
 module.exports = {
     loadHomepage,
     pageNotFound,
@@ -447,4 +498,5 @@ module.exports = {
     loadShoppingPage,
     filterProduct,
     filterByPrice,
+    searchProducts,
 }
