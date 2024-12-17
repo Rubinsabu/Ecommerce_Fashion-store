@@ -393,6 +393,45 @@ const filterProduct = async(req,res)=>{
     }
 
 }
+
+const filterByPrice = async(req,res) =>{
+    try {
+        const user = req.session.user;
+        const userData = await User.findOne({_id:user});
+        const brands = await Brand.find({}).lean();
+        const categories = await Category.find({isListed:true}).lean();
+        
+        let findProducts = await Product.find({
+            salePrice: {$gt:req.query.gt,$lt:req.query.lt},
+            isBlocked: false,
+            quantity: {$gt:0}
+        }).lean();
+
+        findProducts.sort((a,b)=>new Date(b.createdOn)-new Date(a.createdOn));
+        
+        let itemsPerPage=6;
+        let currentPage = parseInt(req.query.page)|| 1;
+        let startIndex = (currentPage-1)*itemsPerPage;
+        let endIndex = startIndex + itemsPerPage;
+        let totalPages= Math.ceil(findProducts.length/itemsPerPage);
+        const currentProduct = findProducts.slice(startIndex,endIndex);
+        req.session.filteredProducts = findProducts;
+
+        res.render('shop',{
+            user: userData,
+            products: currentProduct,
+            category: categories,
+            brand: brands,
+            totalPages,
+            currentPage,
+        })
+
+    } catch (error) {
+        console.log(error);
+        res.redirect("/pageNotFound")
+    }
+}
+
 module.exports = {
     loadHomepage,
     pageNotFound,
@@ -407,4 +446,5 @@ module.exports = {
     //checkUserBlocked,
     loadShoppingPage,
     filterProduct,
+    filterByPrice,
 }
