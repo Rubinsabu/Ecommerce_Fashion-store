@@ -1,286 +1,11 @@
 <%- include("../../views/partials/user/header") %>
-
-<!-- Bootstrap CSS -->
-<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet"/>
-<!-- Google Fonts -->
-<link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap" rel="stylesheet"/>
-<!-- icons Flaticons -->
-<link rel='stylesheet' href='https://cdn-uicons.flaticon.com/2.6.0/uicons-regular-straight/css/uicons-regular-straight.css'>
 <link rel='stylesheet' href='https://cdn-uicons.flaticon.com/2.6.0/uicons-solid-straight/css/uicons-solid-straight.css'>
-
-<style>
-    /* General Styles */
-    body {
-        font-family: 'Roboto', sans-serif;
-        background-color: #f9f9f9;
-        margin: 0;
-        padding: 0;
-    }
-
-    /* Breadcrumb Navigation */
-    .breadcrumb-wrap {
-        padding: 10px 0;
-        font-size: 14px;
-    }
-
-    .breadcrumb a {
-        color: #007b5e;
-        text-decoration: none;
-        font-weight: 500;
-    }
-
-    .breadcrumb span {
-        margin: 0 5px;
-        color: #555;
-    }
-
-    /* Product Detail Container */
-    .product-detail {
-        background-color: #fff;
-        border-radius: 10px;
-        box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
-        padding: 20px;
-        display: flex;
-        flex-wrap: wrap;
-        gap: 20px;
-    }
-
-    /* Image Section */
-    .detail-gallery {
-        flex: 1;
-        min-width: 300px;
-    }
-
-    .detail-gallery img {
-        width: 100%;
-        border-radius: 10px;
-        object-fit: contain;
-    }
-
-    .slider-nav-thumbnails {
-        display: flex;
-        gap: 10px;
-        margin-top: 10px;
-        justify-content: center;
-    }
-
-    .slider-nav-thumbnails img {
-        width: 70px;
-        height: 70px;
-        object-fit: cover;
-        border: 1px solid #ddd;
-        border-radius: 5px;
-        cursor: pointer;
-        transition: transform 0.2s ease;
-    }
-
-    .slider-nav-thumbnails img:hover {
-        transform: scale(1.1);
-    }
-
-    /* Product Information */
-    .detail-info {
-        flex: 1.5;
-        min-width: 350px;
-    }
-
-    .title-detail {
-        font-size: 30px;
-        font-weight: 700;
-        color: #333;
-        margin-bottom: 5px;
-    }
-
-    .brand-link {
-        color: #007b5e;
-        text-decoration: none;
-        font-weight: 500;
-    }
-    .pro-details-brand a {
-        color: #007b5e;
-    }
-    .product-price {
-        margin: 15px 0;
-        font-size: 24px;
-        font-weight: 700;
-        color: #007b5e;
-    }
-
-    .product-price .old-price {
-        text-decoration: line-through;
-        color: #aaa;
-        font-weight: 400;
-        margin-left: 10px;
-        font-size: 20px;
-    }
-
-    .product-price .save-price {
-        color: #e74c3c;
-        font-weight: 500;
-        font-size: 16px;
-    }
-
-    /* Rating and Reviews */
-    .rating-section {
-        display: flex;
-        align-items: center;
-        gap: 10px;
-        margin-bottom: 15px;
-    }
-
-    .rating-section i {
-        color: #ffa500;
-    }
-
-    .reviews {
-        color: #555;
-        font-size: 14px;
-    }
-
-    /* Features List */
-    .product_sort_info ul {
-        list-style: none;
-        padding: 0;
-        margin: 0;
-        color: #555;
-    }
-
-    .product_sort_info li {
-        margin-bottom: 10px;
-    }
-
-    .product_sort_info i {
-        color: #007b5e;
-        margin-right: 8px;
-    }
-
-    /* Quantity and Add to Cart */
-    .quantity-box {
-        display: flex;
-        align-items: center;
-        gap: 10px;
-        margin-bottom: 15px;
-    }
-
-    /* .qty-down, .qty-up {
-        display: inline-block;
-        padding: 5px 12px;
-        background-color: #007b5e;
-        color: #fff;
-        border-radius: 5px;
-        cursor: pointer;
-        font-weight: 500;
-        transition: background-color 0.2s ease;
-    }
-
-    .qty-down:hover, .qty-up:hover {
-        background-color: #005840;
-    } */
-
-    .qty-val {
-        font-weight: 700;
-        font-size: 18px;
-    }
-
-    .add-to-cart {
-        background-color: #007b5e;
-        color: #fff;
-        border: none;
-        padding: 10px 25px;
-        font-size: 16px;
-        font-weight: 600;
-        border-radius: 5px;
-        cursor: pointer;
-        transition: background-color 0.2s ease;
-    }
-
-    .add-to-cart:hover {
-        background-color: #005840;
-    }
-
-    /* Wishlist icon styling */
-    .wishlist a {
-        font-size: 24px;
-        color: #007b5e;
-        transition: color 0.3s;
-    }
-
-    .wishlist a:hover {
-        color: #005840;
-    }
-
-    .detail-extralink {
-    display: flex;
-    align-items: center;
-    justify-content: flex-start; /* Align all items to the start */
-    gap: 15px; /* Space between items */
-    }
-
-/* Styling for quantity buttons */
-.detail-qty {
-    display: flex;
-    align-items: center;
-}
-
-.qty-down, .qty-up {
-    display: inline-block;
-    padding: 10px;
-    background-color: #f5f5f5;
-    border-radius: 50%;
-    cursor: pointer;
-    transition: background-color 0.2s;
-}
-
-.qty-down:hover, .qty-up:hover {
-    background-color: #007b5e; /* Hover effect for up/down buttons */
-    color: white;
-}
-    /* Availability */
-    .availability {
-        color: #007b5e;
-        font-weight: 600;
-    }
-
-    /* Links and Tags */
-    .stock-code, .tags a {
-        color: #007b5e;
-        text-decoration: none;
-        font-weight: 500;
-    }
-
-    /* Responsive Design */
-    @media (max-width: 768px) {
-        .product-detail {
-            flex-direction: column;
-        }
-
-        .slider-nav-thumbnails img {
-            width: 50px;
-            height: 50px;
-        }
-    }
-    a , ins {
-    text-decoration: none;
-    }
-    .product-meta {
-    list-style-type: none; /* Remove bullet points */
-    padding: 0;
-    margin: 0;
-    }
-
-.product-meta li {
-    margin-bottom: 5px; /* Reduce the gap between list items */
-}
-
-.product-meta a {
-    color: #007b5e; /* Change link color */
-    text-decoration: none; /* Remove underline */
-}
-
-/* For star rating */
+ <style>
+   
 .product-rate-cover {
     display: flex;
-    align-items: center;  /* Aligns items vertically */
+    align-items: center; 
+    gap: 10px;
 }
 .product-rate {
     display: flex;
@@ -288,8 +13,8 @@
 }
 
 .star {
-    font-size: 20px; /* Adjust size of the stars */
-    color: #d3d3d3; /* Default color for unfilled stars */
+    font-size: 15px; 
+    color: #d3d3d3; 
 }
 
 .product-rating {
@@ -298,28 +23,29 @@
 }
 
 .product-rating i {
-    font-size: 20px;
-    color: #f1c40f; /* Color for filled stars (yellow) */
+    font-size: 15px;
+    color: #f1c40f; 
 }
 
-/* Adjust the stars based on rating percentage */
+
 .product-rating .star-filled {
-    color: #f1c40f; /* Yellow color for filled stars */
+    color: #f1c40f; 
 }
 
 .product-rating .star-empty {
-    color: #d3d3d3; /* Grey color for empty stars */
+    color: #d3d3d3; 
 }
-</style>
-
-
+.font-small {
+    font-size: 13px; /* Adjust font size for better alignment */
+}
+</style> 
 <main class="main">
  <div class="page-header breadcrumb-wrap">
      <div class="container">
          <div class="breadcrumb">
              <a href="#" rel="nofollow">Home</a>
-             <span>></span> Fashion
-             <span>></span>Product Detail Page
+             <span></span> Fashion
+             <span></span>Product Details Page
          </div>
      </div>
  </div>
@@ -336,7 +62,7 @@
                                      <figure class="border-radius-10">
                                          <img src="/uploads/re-image/<%=product.productImage[0] %>" alt="product Image">
                                      </figure>
-                                     <!-- <figure class="border-radius-10">
+                                     <figure class="border-radius-10">
                                        <img src="/uploads/re-image/<%=product.productImage[1] %>" alt="product Image">
                                    </figure>
                                    <figure class="border-radius-10">
@@ -347,7 +73,7 @@
                                    </figure>
                                    <figure class="border-radius-10">
                                        <img src="/uploads/re-image/<%=product.productImage[4] %>" alt="product Image">
-                                   </figure> -->
+                                   </figure>
                                  </div>
                                  <div  class="slider-nav-thumbnails pl-15 pr-15">
                                     <%for(let i=0;i<product.productImage.length;i++){ %>
@@ -361,12 +87,12 @@
                          <div class="col-md-6 col-sm-12 col-xs-12">
                              <div class="detail-info">
                                  <h2 class="title-detail"><%=product.productName %></h2>
-                                 <div class="product-detail-rating mt-3">
-                                     <div class="pro-details-brand ">
-                                         <span> Brands: <a href="#"><%=product.brand %></a></span>
+                                 <div class="product-detail-rating">
+                                     <div class="pro-details-brand">
+                                         <span> Brands: <a href="#"></a><%=product.brand %></span>
                                      </div>
-                                     <div class="product-rate-cover d-flex align-items-center justify-content-end">
-                                         <div class="product-rate ">
+                                     <!-- <div class="product-rate-cover text-end">
+                                         <div class="product-rate d-inline-block">
                                              <div class="product-rating" style="width:90%">
                                                 <i class="fi fi-ss-star star"></i>
                                                 <i class="fi fi-ss-star star"></i>
@@ -374,14 +100,25 @@
                                                 <i class="fi fi-ss-star star"></i>
                                              </div>
                                          </div>
-                                         <span class="font-small ms-3 text-muted"> (25 reviews)</span>
-                                     </div>
+                                         <span class="font-small ml-5 text-muted"> (25 reviews)</span>
+                                     </div> -->
+                                     <div class="product-rate-cover">
+                                        <div class="product-rate ">
+                                            <div class="product-rating" style="width:90%">
+                                               <i class="fi fi-ss-star star"></i>
+                                               <i class="fi fi-ss-star star"></i>
+                                               <i class="fi fi-ss-star star"></i>
+                                               <i class="fi fi-ss-star star"></i>
+                                            </div>
+                                        </div>
+                                        <span class="font-small ms-3 text-muted"> (25 reviews)</span>
+                                    </div>
                                  </div>
                                  <div class="clearfix product-price-cover">
                                      <div class="product-price primary-color float-left">
                                          <ins><span class="text-brand"><%=product.salePrice %></span></ins>
-                                         <ins><span class="old-price font-md ml-1"><%=product.regularPrice %></span></ins>
-                                         <span class="save-price  font-md color3 ml-3">
+                                         <ins><span class="old-price font-md ml-15"><%=product.regularPrice %></span></ins>
+                                         <span class="save-price  font-md color3 ml-15">
                                             <% if(!totalOffer){%>
                                                 No Offers
                                             <% }else{ %>
@@ -402,24 +139,24 @@
                                      </ul>
                                  </div>
                                
-                                 <div class="bt-1 border-color-1 mt-4 mb-30"></div>
-                                 <div class="detail-extralink d-flex align-items-center">
-                                    <div class="detail-qty border radius mr-3">
-                                        <a href="#" class="qty-down"><i class="fi-rs-angle-small-down"></i></a>
-                                        <span class="qty-val" id="quantity">1</span>
-                                        <a href="#" class="qty-up"><i class="fi-rs-angle-small-up"></i></a>
-                                    </div>
-                                    <div class="product-extra-link2 mr-3">
-                                        <button type="submit" class="button add-to-cart">Add to cart</button>
-                                    </div>
-                                    <div class="wishlist">
-                                        <a aria-label="Add To Wishlist" class="action-btn hover-up" href="#"><i class="fi-rs-heart"></i></a>
-                                    </div>
-                                </div>
-                                 <ul class="product-meta font-xs color-grey mt-5">
-                                     <li class="mb-3">Stock Code: <a href="#">FWM15VKT</a></li>
-                                     <li class="mb-3">Tags: <a href="#" rel="tag"></a> <a href="#" rel="tag"><%= category.name %></a> <a href="#" rel="tag"></a> </li>
-                                     <li>Availability:<span class="in-stock text-success ml-2"><%= quantity %> Items in Stock </span></li>
+                                 <div class="bt-1 border-color-1 mt-30 mb-30"></div>
+                                 <div class="detail-extralink">
+                                     <div class="detail-qty border radius">
+                                         <a href="#" class="qty-down" onclick="" ><i class="fi-rs-angle-small-down"></i></a>
+                                         <span class="qty-val" id="quantity">1</span>
+                                         <a href="#" class="qty-up" onclick=""><i class="fi-rs-angle-small-up"></i></a>
+                                     </div>
+                                     <div class="product-extra-link2">
+                                      
+                                         <button type="submit" class="button button-add-to-cart" onclick="">Add to cart</button>
+                                       
+                                         <a aria-label="Add To Wishlist" class="action-btn hover-up" href="#"><i class="fi-rs-heart"></i></a>
+                                     </div>
+                                 </div>
+                                 <ul class="product-meta font-xs color-grey mt-50">
+                                     <li class="mb-5">Stock Code: <a href="#">FWM15VKT</a></li>
+                                     <li class="mb-5">Tags: <a href="#" rel="tag"></a> <a href="#" rel="tag"><%= category.name %></a> <a href="#" rel="tag"></a> </li>
+                                     <li>Availability:<span class="in-stock text-success ml-5"><%= quantity %> Items in Stock</span></li>
                                  </ul>
                              </div>
                          </div>
@@ -431,9 +168,6 @@
      </div>
  </section>
 </main>
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
-
-
 <%- include("../../views/partials/user/footer") %>
 
 
