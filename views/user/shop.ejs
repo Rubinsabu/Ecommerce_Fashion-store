@@ -305,7 +305,7 @@
         <%for(let i=0;i<products.length;i++){ %>
          <div class="product-card">
            <span class="wishlist-btn" onclick="">❤️</span>
-           <a href="">
+           <a href="/productDetails?id=<%=products[i]._id%>">
              <img src="/uploads/product-images/<%=products[i].productImage[0] %>" alt="<%=products[i].productName %>" />
              <h4><%=products[i].productName %></h4>
              <p>Brand: <%=products[i].brand %></p>
