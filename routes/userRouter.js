@@ -35,6 +35,12 @@ router.get('/logout',userController.logout);
 
 router.get("/userProfile",userAuth,profileController.userProfile);
 
+//Address Management
+router.get('/addAddress',userAuth,profileController.addAddress);
+router.post('/addAddress',userAuth,profileController.postAddAddress);
+router.get('/editAddress',userAuth,profileController.editAddress);
+router.post('/editAddress',userAuth,profileController.postEditAddress);
+
 //Product management
 router.get('/productDetails',userAuth,productController.productDetails);
 
