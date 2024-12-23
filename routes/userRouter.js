@@ -3,6 +3,7 @@ const router = express.Router();
 const userController = require("../controllers/user/userController");
 const profileController = require('../controllers/user/profileController');
 const productController = require('../controllers/user/productController');
+const cartController = require('../controllers/user/cartController');
 const passport = require("passport");
 const { userAuth } = require("../middlewares/auth");
 
@@ -44,5 +45,12 @@ router.get('/deleteAddress',userAuth,profileController.deleteAddress);
 
 //Product management
 router.get('/productDetails',userAuth,productController.productDetails);
+
+// Cart Management
+router.get("/cart", userAuth, cartController.getCartPage)
+router.post("/addToCart",userAuth, cartController.addToCart)
+router.post("/changeQuantity", userAuth,cartController.changeQuantity)
+router.get("/deleteItem", userAuth, cartController.deleteProduct)
+
 
 module.exports = router;

@@ -200,7 +200,7 @@
                       <div class="product-content-wrap">
                           <h6><%=products[i].productName%></h6>
                           <h5><%=products[i].salePrice%></h5>
-                          <a href="/addToCart?id=<%=products[i]._id%>">Add to cart</a>
+                          <a href="" onclick="addToCart('<%= products[i]._id %>')" >Add to cart</a>
                       </div>
                   </div>
               </div>
@@ -208,7 +208,33 @@
       </div>
   </div>
 </section>
+<script>
+    function addToCart(productId) {
+    
+    console.log("Product ID:", productId);
+      fetch('/addToCart', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ productId }),
+      })
+        .then((response) => response.json())
+        .then((data) => {
+          if (data.status === true) {
+            alert('Product added to cart!');
+          } else {
+            alert(data.message);
+          }
+        })
+        .catch((error) => {
+          console.error('Error adding to cart:', error);
+        });
+    }
+  </script>
+
 <%- include("../../views/partials/user/footer") %>
+
 
 
 
