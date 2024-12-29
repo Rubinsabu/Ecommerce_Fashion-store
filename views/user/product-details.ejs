@@ -148,7 +148,7 @@
                                      </div>
                                      <div class="product-extra-link2">
                                       
-                                         <button type="submit" class="button button-add-to-cart" onclick="" href="/addToCart">Add to cart</button>
+                                         <button type="submit" class="button button-add-to-cart" onclick="" href="">Add to cart</button>
                                        
                                          <a aria-label="Add To Wishlist" class="action-btn hover-up" href="#"><i class="fi-rs-heart"></i></a>
                                      </div>
@@ -168,6 +168,30 @@
      </div>
  </section>
 </main>
+<script>
+    function addToCart(productId) {
+    
+    console.log("Product ID:", productId);
+      fetch('/addToCart', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ productId }),
+      })
+        .then((response) => response.json())
+        .then((data) => {
+          if (data.status === true) {
+            alert('Product added to cart!');
+          } else {
+            alert(data.message);
+          }
+        })
+        .catch((error) => {
+          console.error('Error adding to cart:', error);
+        });
+    }
+  </script>
 <%- include("../../views/partials/user/footer") %>
 
 

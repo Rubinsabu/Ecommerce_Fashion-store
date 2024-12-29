@@ -148,74 +148,55 @@
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 <script>
     function changeQuantity(productId, cartQuantity, count, productPrice, i, productQuantity) {
-        const abc = document.getElementById("totalabc").value
-        const cartProductQuantityElement = document.querySelector(`#cartProductQuantity${i}`)
-        const subtotalElement = document.querySelector(`#subTotal${i}`);
-        const totalElements = document.getElementById('total').innerHTML;
 
-        let currentQuantity = parseInt(cartProductQuantityElement.value)
-        const currentSubTotal = parseInt(subtotalElement.innerHTML);           
+        const cartProductQuantityElement = document.getElementById(`cartProductQuantity${i}`);
+        const subtotalElement = document.getElementById(`subTotal${i}`);
+        const totalElement = document.getElementById('total');
 
-        if (currentQuantity + count > 3) {
-            Swal.fire({
-                title: 'Limit Exceeded!',
-                text: 'You can only add up to 3 items to your cart.',
-                icon: 'error',
-                timer: 5000
-            });
-            return;
+        if (!cartProductQuantityElement || !subtotalElement || !totalElement) {
+        console.error("Required DOM elements not found");
+        return;
+        }
+
+        let currentQuantity = parseInt(cartProductQuantityElement.value)        
+        if (isNaN(currentQuantity)) {
+        console.error("Invalid quantity value");
+        return;
         }
         
-        const newQuantity = currentQuantity + count
 
-        if (count === -1 && newQuantity < 1) {
-            return; 
-        }
-
-        if(currentSubTotal < currentSubTotal){
-            return
-        }
-        if (count == 1 && newQuantity > productQuantity) {
-            Swal.fire({
-                title: 'STOCK!',
-                text: 'Product is out of stock.',
-                icon: 'error',
-                timer: 5000
-            })
-            return
-        }
-
-        const newSubtotal = newQuantity * productPrice
-        if (count == 1) {
-            document.getElementById(`subTotal${i}`).innerHTML = parseInt(subtotalElement.innerHTML) + parseInt(productPrice)
-        } else {
-            document.getElementById(`subTotal${i}`).innerHTML = parseInt(subtotalElement.innerHTML) - parseInt(productPrice)
-        }
         $.ajax({
             url: '/changeQuantity',
             method: 'POST',
             data: {
                 productId: productId,
-                quantity: newQuantity,
                 count: count
             },
 
             success: (response) => {
-                let currentQuantity = parseInt(cartProductQuantityElement.value)
-                let currentSubTotal = parseInt(subtotalElement.value)
-
-                document.getElementById(`cartProductQuantity${i}`).value = currentQuantity + count
-                document.getElementById(`subTotal${i}`).value = currentSubTotal * count
-                
-                if (response.count == 1) {
-                    document.getElementById(`total`).innerHTML =  parseInt(response.grandTotal)
-                } else {
-                    document.getElementById(`total`).innerHTML = parseInt(response.grandTotal)
-                }
-
+                console.log("response:",response);
+                if (response.status) {
+                // Update DOM elements based on the response
+                cartProductQuantityElement.value = response.quantityInput;
+                subtotalElement.innerHTML = response.totalAmount;
+                totalElement.innerHTML = response.grandTotal;
+            } else {
+                Swal.fire({
+                    title: 'Error!',
+                    text: response.error || 'Unable to Update Quantity',
+                    icon: 'error',
+                    timer: 5000,
+                });
+            }
             },
-            error: (error) => {
-                // Handle error
+            error: (jqXHR, textStatus, errorThrown) => {
+                const errorResponse = jqXHR.responseJSON;
+                Swal.fire({
+                title: 'Error!',
+                text: errorResponse.error || 'Unable to update cart quantity. Please try again later.',
+                icon: 'error',
+                timer: 5000,
+                });
             }
         })
     }

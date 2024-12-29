@@ -311,7 +311,7 @@
              <p>Brand: <%=products[i].brand %></p>
              <p>Price: ₹<%=products[i].salePrice.toLocaleString('en-IN') %><span class="text-muted"><strike>₹<%=products[i].regularPrice.toLocaleString('en-IN') %></strike></span></p>
            </a>
-           <button class="add-to-cart-btn" onclick="">Add to Cart</button>
+           <button class="add-to-cart-btn" onclick="addToCart('<%= products[i]._id %>')">Add to Cart</button>
          </div>
          <% } %>
      </main>
@@ -337,6 +337,30 @@
  </section>
 </div>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.0/jquery.min.js"></script>
+<script>
+  function addToCart(productId) {
+  
+  console.log("Product ID:", productId);
+    fetch('/addToCart', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({ productId }),
+    })
+      .then((response) => response.json())
+      .then((data) => {
+        if (data.status === true) {
+          alert('Product added to cart!');
+        } else {
+          alert(data.message);
+        }
+      })
+      .catch((error) => {
+        console.error('Error adding to cart:', error);
+      });
+  }
+</script>
 <%- include("../../views/partials/user/footer") %>
 
 
