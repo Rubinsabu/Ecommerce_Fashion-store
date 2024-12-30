@@ -121,23 +121,6 @@ const signup = async(req,res)=>{
     }
 }
 
-// const signup = async(req,res)=>{
-
-//     const {name,email,phone,password} = req.body;
-
-//     try{
-      
-//         const newUser = new User({name,email,phone,password});
-//         console.log(newUser);
-        
-//         await newUser.save();
-//         return res.redirect("/signup");
-
-//     }catch(error){
-//         console.error("Error for save user",error);
-//         res.status(500).send("Internal server error");
-//     }
-// }
 const securePassword = async(password)=>{
     try{
 
@@ -482,6 +465,50 @@ const searchProducts = async(req,res)=>{
         res.redirect('/pageNotFound');
     }
 }
+const removeFilters = async (req, res) => {
+    try {
+        const user = req.session.user;
+
+        // Clear the session data related to filtered products
+        req.session.filteredProducts = null;
+
+        // Fetch all products without any filters
+        const products = await Product.find({
+            isBlocked: false,
+            quantity: { $gt: 0 }
+        }).lean();
+
+        // Sort the products by creation date (most recent first)
+        products.sort((a, b) => new Date(b.createdOn) - new Date(a.createdOn));
+
+        const brands = await Brand.find({}).lean();
+        const categories = await Category.find({ isListed: true }).lean();
+
+        let itemsPerPage = 6;
+        let currentPage = parseInt(req.query.page) || 1;
+        let startIndex = (currentPage - 1) * itemsPerPage;
+        let endIndex = startIndex + itemsPerPage;
+        let totalPages = Math.ceil(products.length / itemsPerPage);
+        const currentProduct = products.slice(startIndex, endIndex);
+
+        res.render("shop", {
+            user,
+            products: currentProduct,
+            category: categories,
+            brand: brands,
+            totalPages,
+            currentPage,
+            selectedCategory: null,
+            selectedBrand: null,
+            minPrice: null,
+            maxPrice: null,
+            count: products.length,
+        });
+    } catch (error) {
+        console.error("Error:", error);
+        res.redirect("/pageNotFound");
+    }
+};
 
 module.exports = {
     loadHomepage,
