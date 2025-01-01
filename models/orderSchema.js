@@ -15,6 +15,10 @@ const orderSchema = new Schema({
             ref:'Product',
             required:true
         },
+        name:{
+            type:String,
+            required: true
+        },
         quantity:{
             type:Number,
             required: true
@@ -41,13 +45,17 @@ const orderSchema = new Schema({
         ref:'User',
         required:true
     },
+    payment:{
+        type:String,
+        required: true
+    },
     invoiceDate:{
         type:Date
     },
     status:{
         type:String,
         required:true,
-        enum:['Pending','Processing','Shipped','Delivered','Cancelled','Return Requested','Returned'],
+        enum:['Pending','Processing','Shipped','Delivered','Cancelled','Return Requested','Returned','Confirmed','Failed'],
     },
     createdOn :{
         type:Date,

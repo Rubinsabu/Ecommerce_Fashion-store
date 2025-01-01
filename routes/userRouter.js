@@ -55,6 +55,8 @@ router.get("/deleteItem", userAuth, cartController.deleteProduct)
 
 //Order management
 router.get("/checkout", userAuth, orderController.getCheckoutPage);
+router.post("/orderPlaced", userAuth,orderController.orderPlaced);
+
 
 
 

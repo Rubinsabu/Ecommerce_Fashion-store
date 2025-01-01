@@ -105,6 +105,17 @@ const addToCart = async (req, res) => {
       // Save the updated cart
       await cart.save();
   
+      // **Update the cart field in the User schema**
+      const user = await User.findById(userId);
+      if (user) {
+          // Sync the cart information to the user's cart field
+          user.cart = cart.items.map((item) => ({
+              productId: item.productId,
+              quantity: item.quantity,
+          }));
+          await user.save();
+      }
+
       return res.json({
         status: true,
         cartLength: cart.items.length,
@@ -176,6 +187,17 @@ const changeQuantity = async (req, res) => {
     cartItem.totalPrice = newQuantity * product.salePrice;
 
     await cart.save();
+
+    //Updating in userSchema cart
+    const user = await User.findById(userId);
+      if (user) {
+          // Sync the cart information to the user's cart field
+          user.cart = cart.items.map((item) => ({
+              productId: item.productId,
+              quantity: item.quantity,
+          }));
+          await user.save();
+      }
 
     // Calculate the new grand total
     const grandTotal = cart.items.reduce(
