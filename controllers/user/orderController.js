@@ -164,6 +164,12 @@ const getCheckoutPage = async (req, res) => {
         createdOn: Date.now(),
       });
       let orderDone = await newOrder.save();
+
+      // Add the orderId to the user's orderHistory
+      await User.updateOne(
+        { _id: userId },
+        { $push: { orderHistory: orderDone._id } }
+      );
   
       await User.updateOne({ _id: userId }, { $set: { cart: [] } }); //Empty UserSchema cart
       await Cart.updateOne({ userId }, { $set: { items: [] } }); //Empty CartSchema
@@ -227,9 +233,54 @@ const getCheckoutPage = async (req, res) => {
     }
   };
   
+  const getOrderDetailsPage = async (req, res) => {
+    try {
+      const userId = req.session.user;
+      const orderId = req.query.id;
+      const findOrder = await Order.findOne({ _id: orderId })
+      .populate({
+        path: "orderedItems.product",
+        select: "productName productImage"
+      });
+      const addressId = findOrder?.address;
+
+    const findAddress = await Address.findOne(
+      { userId: userId, "address._id": addressId },
+      { "address.$": 1 }
+    );
+
+    const userAddress = findAddress?.address[0] || null;
+      console.log("Order with populated address:", findOrder);
+      console.log("Address Data:", findAddress);
+      const findUser = await User.findOne({ _id: userId });
+      let totalGrant = 0;
+      findOrder.orderedItems.forEach((val) => {
+        totalGrant += val.price * val.quantity;
+      });
+  
+      const totalPrice = findOrder.totalPrice;
+      const discount = totalGrant - totalPrice;
+      const finalAmount = totalPrice; 
+      //console.log("Total price:",totalPrice);
+
+      res.render("orderDetails", {
+        orders: findOrder,
+        user: findUser,
+        totalGrant: totalGrant,
+        totalPrice: totalPrice,
+        discount: discount,
+        finalAmount: finalAmount,
+        address: userAddress,
+      });
+    } catch (error) {
+      res.redirect("/pageNotFound");
+    }
+  };
+  
 
   module.exports={
     getCheckoutPage,
     orderPlaced,
+    getOrderDetailsPage,
   }
   

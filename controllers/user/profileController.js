@@ -1,14 +1,23 @@
 const User = require("../../models/userSchema");
 const Address = require('../../models/addressSchema');
+const Order = require('../../models/orderSchema');
 
 const userProfile = async (req,res)=>{
     try {
         const userId = req.session.user;
-        const userData = await User.findById(userId);
+        const userData = await User.findById(userId).populate({
+            path: 'orderHistory',
+            populate: {
+                path: 'orderedItems.product', // Populate product details within orderedItems
+            },
+        });
         const addressData = await Address.findOne({userId : userId});
+        const orderDetails = userData.orderHistory;
+        console.log('Order details : ',orderDetails);
         res.render('profile',{
             user:userData,
             userAddress: addressData,
+            orders: orderDetails,
         });
 
     } catch (error) {
