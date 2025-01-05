@@ -47,8 +47,8 @@ const userSchema = new Schema({
         }
     }],
     wallet : [{
-        type: Schema.Types.ObjectId,
-        ref:"Wishlist"
+        type: Number,
+        default:0,
     }],
     orderHistory:[{
         type: Schema.Types.ObjectId,

@@ -57,6 +57,7 @@ router.get("/deleteItem", userAuth, cartController.deleteProduct)
 router.get("/checkout", userAuth, orderController.getCheckoutPage);
 router.post("/orderPlaced", userAuth,orderController.orderPlaced);
 router.get("/orderDetails", userAuth,orderController.getOrderDetailsPage);
+router.post('/cancelOrder',userAuth,orderController.cancelOrder);
 
 
 

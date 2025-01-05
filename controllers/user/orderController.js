@@ -277,10 +277,71 @@ const getCheckoutPage = async (req, res) => {
     }
   };
   
+  const cancelOrder = async (req, res) => {
+    try {
+      const userId = req.session.user;
+      const findUser = await User.findOne({ _id: userId });
+      if (!findUser) {
+        return res.status(404).json({ message: "User not found" });
+      }
+      const { orderId } = req.body;
+      const findOrder = await Order.findOne({ _id: orderId });
+      if (!findOrder) {
+        return res.status(404).json({ message: "Order not found" });
+      }
+      if (findOrder.status === "Cancelled") {
+        return res.status(400).json({ message: "Order is already cancelled" });
+      }
+      if (["Delivered", "Returned"].includes(findOrder.status)) {
+        return res.status(400).json({ message: `Order cannot be cancelled. Current status: ${findOrder.status}` });
+      }
+      
+      // Handle refund if payment was made via Razorpay or wallet
+      if ((findOrder.payment === "razorpay" || findOrder.payment === "wallet") && findOrder.status === "Confirmed") {
+        findUser.wallet += findOrder.finalAmount;
+        // Update user wallet history
+        await User.updateOne(
+          { _id: userId },
+          {
+            $push: {
+              history: {
+                amount: findOrder.finalAmount,
+                status: "credit",
+                date: Date.now(),
+                description: `Order ${orderId} cancelled`,
+              },
+            },
+          }
+        );
+        await findUser.save();
+      }
+  
+      // Update order status to cancelled
+      await Order.updateOne({ _id: orderId }, { status: "Cancelled" });
+  
+      // Update product quantities
+      for (const item of findOrder.orderedItems) {
+        const product = await Product.findById(item.product);
+        if (product) {
+          product.quantity += item.quantity;
+          await product.save();
+        } else {
+          console.error(`Product with ID ${item.product} not found`);
+        }
+      }
+  
+      res.status(200).json({ message: "Order cancelled successfully" });
+    } catch (error) {
+      console.error(error);
+      res.status(500).json({ message: "Internal server error" });
+    }
+  };
+  
 
   module.exports={
     getCheckoutPage,
     orderPlaced,
     getOrderDetailsPage,
+    cancelOrder,
   }
   
