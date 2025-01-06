@@ -303,10 +303,14 @@ const loadShoppingPage = async(req,res)=>{
             brand: brands,
             totalProducts: totalProducts,
             currentPage: page,
-            totalPages: totalPages
+            totalPages: totalPages,
+            selectedCategory: null,
+            selectedBrand: null,
+            selectedPriceRange: null 
         });
 
     } catch (error) {
+        console.log(error);
         res.redirect('/pageNotFound');
     }
 }
@@ -369,9 +373,11 @@ const filterProduct = async(req,res)=>{
             currentPage,
             selectedCategory: category || null,
             selectedBrand: brand || null,
+            selectedPriceRange: null,
         })
 
     } catch (error) {
+        console.log(error);
         res.redirect('/pageNotFound');
     }
 
@@ -407,6 +413,9 @@ const filterByPrice = async(req,res) =>{
             brand: brands,
             totalPages,
             currentPage,
+            selectedCategory: null,
+            selectedBrand: null,
+            selectedPriceRange: { gt:req.query.gt, lt:req.query.lt },
         })
 
     } catch (error) {

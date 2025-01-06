@@ -92,6 +92,10 @@
    color: #007bff;
  }
 
+ .active-filter {
+    font-weight: bold;
+    color: #46698f !important; /* Highlight color */
+  }
 
  .product-list-container {
    display: flex;
@@ -220,7 +224,11 @@
    color: white;
    transform: scale(1.05);
  }
-
+ .active-filter-price-button {
+  background-color: #007bff;
+   color: white;
+   transform: scale(0.95);
+ }
 
  .price-button:active {
    transform: scale(0.95);
@@ -263,7 +271,8 @@
            <ul>
                 <%for(let i=0;i<category.length;i++){ %>
                <li class="filter-item">
-                 <a href="/filter?category=<%=category[i]._id%>"><%=category[i].name %></a>
+                 <a href="/filter?category=<%=category[i]._id%>" 
+                  class="<%= selectedCategory == category[i]._id ? 'active-filter' : '' %>"><%=category[i].name %></a>
                </li>
                <% } %>
            </ul>
@@ -278,7 +287,9 @@
            <ul>
             <%for(let i=0;i<brand.length;i++){ %>
                <li class="filter-item">
-                 <a href="/filter?brand=<%=brand[i]._id%>"><%=brand[i].brandName %></a>
+                 <a href="/filter?brand=<%=brand[i]._id%>"
+                  class="<%= selectedBrand == brand[i]._id ? 'active-filter' : '' %>">
+                  <%=brand[i].brandName %></a>
                </li>
                <% } %>
            </ul>
@@ -291,10 +302,14 @@
          <div class="filter-title">Filter by Price</div>
          <form id="price-filter-form">
            <div class="price-options">
-             <a href="/filterPrice?gt=0&lt=500"><button type="button" class="price-button">Under ₹500</button></a>
-             <a href="/filterPrice?gt=500&lt=1000"><button type="button" class="price-button">₹500 - ₹1000</button></a>
-             <a href="/filterPrice?gt=1000&lt=1500"><button type="button" class="price-button">₹1000- ₹1500</button></a>
-             <a href="/filterPrice?gt=1500&lt=10000"><button type="button" class="price-button">Above ₹1500</button></a>
+             <a href="/filterPrice?gt=0&lt=500"
+             ><button type="button" class="price-button <%= selectedPriceRange && selectedPriceRange.gt == 0 && selectedPriceRange.lt == 500 ? 'active-filter-price-button' : '' %>">Under ₹500</button></a>
+             <a href="/filterPrice?gt=500&lt=1000" 
+             ><button type="button" class="price-button <%= selectedPriceRange && selectedPriceRange.gt == 500 && selectedPriceRange.lt == 1000 ? 'active-filter-price-button' : '' %>">₹500 - ₹1000</button></a>
+             <a href="/filterPrice?gt=1000&lt=1500"
+             ><button type="button" class="price-button <%= selectedPriceRange && selectedPriceRange.gt == 1000 && selectedPriceRange.lt == 1500 ? 'active-filter-price-button' : '' %>">₹1000- ₹1500</button></a>
+             <a href="/filterPrice?gt=1500&lt=10000"
+             ><button type="button" class="price-button <%= selectedPriceRange && selectedPriceRange.gt == 1500 && selectedPriceRange.lt == 10000 ? 'active-filter-price-button' : '' %>">Above ₹1500</button></a>
            </div>
          </form>
        </div>
