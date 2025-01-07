@@ -50,6 +50,10 @@ const userSchema = new Schema({
         type: Number,
         default:0,
     }],
+    wishlist:[{
+        type:Schema.Types.ObjectId,
+        ref:"Wishlist"
+    }], 
     orderHistory:[{
         type: Schema.Types.ObjectId,
         ref: "Order"

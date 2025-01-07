@@ -5,6 +5,7 @@ const profileController = require('../controllers/user/profileController');
 const productController = require('../controllers/user/productController');
 const cartController = require('../controllers/user/cartController');
 const orderController = require('../controllers/user/orderController');
+const wishlistController = require('../controllers/user/wishlistController');
 const passport = require("passport");
 const { userAuth } = require("../middlewares/auth");
 
@@ -46,6 +47,11 @@ router.get('/deleteAddress',userAuth,profileController.deleteAddress);
 
 //Product management
 router.get('/productDetails',userAuth,productController.productDetails);
+
+//Wishlist management
+router.get('/wishlist',userAuth,wishlistController.loadWishlist);
+router.post('/addToWishlist',userAuth,wishlistController.addToWishlist);
+router.get('/removeFromWishlist',userAuth,wishlistController.removeProduct);
 
 // Cart Management
 router.get("/cart", userAuth, cartController.getCartPage)
