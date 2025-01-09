@@ -19,6 +19,7 @@ router.get('/filter',userAuth,userController.filterProduct)
 router.get('/filterPrice',userAuth,userController.filterByPrice);
 router.post('/search',userAuth,userController.searchProducts);
 router.get('/search',userAuth,userController.searchProducts);
+router.get('/clearFilters',userAuth,userController.clearFilter);
 
 router.get('/signup',userController.loadSignup);
 router.post('/signup',userController.signup);

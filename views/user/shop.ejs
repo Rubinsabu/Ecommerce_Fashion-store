@@ -249,6 +249,22 @@
   background-color: #007bff; /* Blue on hover */
   transform: scale(1.05);
 }
+
+.remove-filter-btn {
+  background-color: #ff4d4d;
+  color: #fff;
+  border: none;
+  padding: 10px 20px;
+  cursor: pointer;
+  border-radius: 5px;
+  font-size: 14px;
+  display: block;
+  margin: 0 auto 20px;
+  text-align: center;
+}
+.remove-filter-btn:hover {
+  background-color: #e60000;
+}
 </style>
 
 
@@ -264,7 +280,16 @@
    </div>
   
    <div class="product-list-container">
-     <aside class="sidebar">
+    <aside class="sidebar">
+      <!-- Remove Filter Button -->
+      <% if (selectedCategory || selectedBrand || selectedPriceRange) { %>
+        <div class="filter-section">
+          <button class="remove-filter-btn" onclick="window.location.href='/clearFilters'">
+            Remove Filter
+          </button>
+        </div>
+      <% } %>
+
        <div class="filter-section">
          <div class="filter-title">Categories</div>
          <div class="category-brand-container">
@@ -366,9 +391,19 @@
       .then((response) => response.json())
       .then((data) => {
         if (data.status === true) {
-          alert('Product added to cart!');
+          Swal.fire({
+            title:'Added to Cart',
+            text:'The product has been added to your Cart',
+            icon: 'success',
+            timer:2000
+          })
         } else {
-          alert(data.message);
+          Swal.fire({
+            title: 'Error',
+            text: data.message,
+            icon: 'error',
+            timer: 2000,
+          })
         }
       })
       .catch((error) => {

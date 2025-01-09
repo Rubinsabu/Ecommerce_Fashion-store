@@ -429,7 +429,7 @@ const searchProducts = async(req,res)=>{
         const user = req.session.user;
         const userData = await User.findOne({_id:user});
         let search = req.body.query;
-
+        console.log("Search text:",search);
         const brands = await Brand.find({}).lean();
         const categories = await Category. find ({isListed: true}).lean();
         const categoryIds = categories.map(category=>category._id.toString());
@@ -440,10 +440,11 @@ const searchProducts = async(req,res)=>{
         }
         else{
             searchResult = await Product.find({
-                /*productName: {$regex:".*"+search+".*",$options:"i"}, */
+                
                 $or: [
                     { productName: { $regex: ".*" + search + ".*", $options: "i" } }, 
-                    { color: { $regex: ".*" + search + ".*", $options: "i" } }       
+                    { color: { $regex: ".*" + search + ".*", $options: "i" } },
+                    { brand: {$regex: ".*" + search + ".*", $options: "i"}},    
                 ],
                 isBlocked:false,
                 quantity:{$gt:0},
@@ -451,6 +452,7 @@ const searchProducts = async(req,res)=>{
             })
         }
         searchResult.sort((a,b)=>new Date(b.createdOn)-new Date(a.createdOn));
+        console.log("Search Result : ",searchResult);
 
         let itemsPerPage=6;
         let currentPage = parseInt(req.query.page)|| 1;
@@ -467,6 +469,9 @@ const searchProducts = async(req,res)=>{
             totalPages,
             currentPage,
             count : searchResult.length,
+            selectedCategory: search,
+            selectedBrand: null,
+            selectedPriceRange: null ,
         })
 
     } catch (error) {
@@ -474,45 +479,10 @@ const searchProducts = async(req,res)=>{
         res.redirect('/pageNotFound');
     }
 }
-const removeFilters = async (req, res) => {
+const clearFilter = async (req, res) => {
     try {
-        const user = req.session.user;
-
-        // Clear the session data related to filtered products
-        req.session.filteredProducts = null;
-
-        // Fetch all products without any filters
-        const products = await Product.find({
-            isBlocked: false,
-            quantity: { $gt: 0 }
-        }).lean();
-
-        // Sort the products by creation date (most recent first)
-        products.sort((a, b) => new Date(b.createdOn) - new Date(a.createdOn));
-
-        const brands = await Brand.find({}).lean();
-        const categories = await Category.find({ isListed: true }).lean();
-
-        let itemsPerPage = 6;
-        let currentPage = parseInt(req.query.page) || 1;
-        let startIndex = (currentPage - 1) * itemsPerPage;
-        let endIndex = startIndex + itemsPerPage;
-        let totalPages = Math.ceil(products.length / itemsPerPage);
-        const currentProduct = products.slice(startIndex, endIndex);
-
-        res.render("shop", {
-            user,
-            products: currentProduct,
-            category: categories,
-            brand: brands,
-            totalPages,
-            currentPage,
-            selectedCategory: null,
-            selectedBrand: null,
-            minPrice: null,
-            maxPrice: null,
-            count: products.length,
-        });
+        delete req.session.filteredProducts; // Clear the session variable
+        res.redirect('/shop');
     } catch (error) {
         console.error("Error:", error);
         res.redirect("/pageNotFound");
@@ -535,4 +505,5 @@ module.exports = {
     filterProduct,
     filterByPrice,
     searchProducts,
+    clearFilter,
 }

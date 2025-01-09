@@ -65,11 +65,11 @@ const addToCart = async (req, res) => {
       const product = await Product.findById({ _id: productId }).lean();
   
       if (!product) {
-        return res.json({ status: "Product not found" });
+        return res.json({ message: "Product not found" });
       }
   
       if (product.quantity <= 0) {
-        return res.json({ status: "Out of stock" });
+        return res.json({ message: "Out of stock" });
       }
   
       // Find or create the cart for the user
@@ -98,7 +98,7 @@ const addToCart = async (req, res) => {
           cartItem.quantity += 1;
           cartItem.totalPrice = cartItem.quantity * product.salePrice;
         } else {
-          return res.json({ status: "Out of stock" });
+          return res.json({ message: "Out of stock" });
         }
       }
   
