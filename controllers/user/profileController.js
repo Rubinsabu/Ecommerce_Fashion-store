@@ -12,8 +12,13 @@ const userProfile = async (req,res)=>{
             },
         });
         const addressData = await Address.findOne({userId : userId});
-        const orderDetails = userData.orderHistory;
+        
+        const orderDetails = userData.orderHistory.sort((a, b) => {
+            return new Date(b.createdOn) - new Date(a.createdOn);
+        });
+
         console.log('Order details : ',orderDetails);
+        
         res.render('profile',{
             user:userData,
             userAddress: addressData,

@@ -64,7 +64,9 @@ router.get("/checkout", userAuth, orderController.getCheckoutPage);
 router.post("/orderPlaced", userAuth,orderController.orderPlaced);
 router.get("/orderDetails", userAuth,orderController.getOrderDetailsPage);
 router.post('/cancelOrder',userAuth,orderController.cancelOrder);
-
+// payment in Order management
+router.post('/verifyPayment',userAuth,orderController.verify);
+router.post('/paymentConfirm',userAuth,orderController.paymentConfirm);
 
 
 module.exports = router;

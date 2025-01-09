@@ -436,21 +436,22 @@
                         }                 
                             else if (response.method === "razorpay") {
                            let orderAmount=Math.round(numericValue*100);
+                           console.log("razorpay popup loading..");
                             var options = {
-                                "key": "rzp_test_vWkG4lrwiDnQ0g",
+                                "key": response.key_id,
                                 "amount": orderAmount,
                                 "currency": "INR",
-                                "name": "Trend Setter",
+                                "name": "MenSide",
                                 "description": "Test Transaction",
-                                "image": "https://firebasestorage.googleapis.com/v0/b/ecommerce-397a7.appspot.com/o/logo.jpg?alt=media&token=07b6be19-1ce8-4797-a3a0-f0eaeaafedad",
+                                "image": "https://github.com/Rubinsabu/Ecommerce_Fashion-store/blob/main/public/img/new_logo.png",
                                 "order_id": response.razorPayOrder.id,
                                 "handler": function (status) {
                                     verifyPayment(response.razorPayOrder, status,response.order._id);
                                 },
                                 "prefill": {
-                                    "name": "Customer Name",
-                                    "email": "customer@example.com",
-                                    "contact": "9961618585"
+                                    "name": response.user.name,
+                                    "email": response.user.email,
+                                    "contact": response.user.phone,
                                 },
 
                                 "theme": {
@@ -504,7 +505,7 @@
                             if (result.value) {
                                 console.log("I am success");
                                 var orderDetailsUrl = `/orderDetails?id=${orderId}`;
-            location.href = orderDetailsUrl;
+                                location.href = orderDetailsUrl;
                             } else if (result.dismiss === "cancel") {
                                 console.log("Nopppp");
                                 location.href = '/'

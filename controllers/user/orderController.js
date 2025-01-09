@@ -6,7 +6,14 @@ const Address = require("../../models/addressSchema");
 const Product = require('../../models/productSchema');
 const Order = require('../../models/orderSchema');
 const mongodb = require("mongodb");
+const razorpay = require("razorpay");
+const crypto = require("crypto");
+const env = require("dotenv").config();
 
+let instance = new razorpay({
+  key_id: process.env.RAZORPAY_KEY_ID,
+  key_secret: process.env.RAZORPAY_KEY_SECRET,
+});
 
 
 const getCheckoutPage = async (req, res) => {
@@ -219,11 +226,16 @@ const getCheckoutPage = async (req, res) => {
         }
       } else if (newOrder.payment === "razorpay") {
         const razorPayGeneratedOrder = await generateOrderRazorpay(orderDone._id, orderDone.finalAmount);
+        console.log("Razorpay payment started.");
         res.json({
           payment: false,
           method: "razorpay",
           razorPayOrder: razorPayGeneratedOrder,
           order: orderDone,
+          key_id: process.env.RAZORPAY_KEY_ID,
+          user: {name: findUser.name,
+                email: findUser.email,
+                phone: findUser.phone,},
           //quantity: cartItemQuantities,
         });
       }
@@ -337,11 +349,63 @@ const getCheckoutPage = async (req, res) => {
     }
   };
   
+  const generateOrderRazorpay = (orderId, total) => {
+    return new Promise((resolve, reject) => {
+      const options = {
+        amount: total * 100,
+        currency: "INR",
+        receipt: String(orderId),
+      };
+      instance.orders.create(options, (err, order) => {
+        if (err) {
+          reject(err);
+        } else {
+          resolve(order);
+        }
+      });
+    });
+  };
+
+  //verify payment
+  const verify = (req, res) => {
+    let hmac = crypto.createHmac("sha256", process.env.RAZORPAY_KEY_SECRET);
+    hmac.update(
+      `${req.body.payment.razorpay_order_id}|${req.body.payment.razorpay_payment_id}`
+    );
+    hmac = hmac.digest("hex");
+    console.log(hmac,"HMAC");
+    console.log(req.body.payment.razorpay_signature,"signature");
+    if (hmac === req.body.payment.razorpay_signature) {
+      console.log("true");
+      res.json({ status: true });
+    } else {
+      console.log("false");
+      res.json({ status: false });
+    }
+  };
+  
+  //confirm payment
+  const paymentConfirm = async (req, res) => {
+    try {
+      await Order.updateOne(
+        { _id: req.body.orderId },
+        { $set: { status: "Confirmed" } }
+      ).then((data) => {
+        res.json({ status: true });
+      });
+    } catch (error) {
+      res.redirect("/pageNotFound");
+    }
+  };
+  
+  
 
   module.exports={
     getCheckoutPage,
     orderPlaced,
     getOrderDetailsPage,
     cancelOrder,
+    paymentConfirm,
+    verify,
   }
   
