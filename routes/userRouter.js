@@ -69,5 +69,7 @@ router.post('/cancelOrder',userAuth,orderController.cancelOrder);
 router.post('/verifyPayment',userAuth,orderController.verify);
 router.post('/paymentConfirm',userAuth,orderController.paymentConfirm);
 
+//download invoice
+router.get("/downloadInvoice/:orderId",userAuth,orderController.downloadInvoice);
 
 module.exports = router;

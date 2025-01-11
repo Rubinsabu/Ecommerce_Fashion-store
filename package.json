@@ -10,7 +10,9 @@
   "description": "",
   "dependencies": {
     "bcrypt": "^5.1.1",
+    "date-fns": "^4.1.0",
     "dotenv": "^16.4.5",
+    "easyinvoice": "^3.0.47",
     "ejs": "^3.1.10",
     "express": "^4.21.1",
     "express-session": "^1.18.1",

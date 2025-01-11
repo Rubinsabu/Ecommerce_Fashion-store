@@ -9,6 +9,11 @@ const mongodb = require("mongodb");
 const razorpay = require("razorpay");
 const crypto = require("crypto");
 const env = require("dotenv").config();
+const easyinvoice = require("easyinvoice");
+const fs = require("fs");
+const path = require("path");
+const { format } = require('date-fns');
+
 
 let instance = new razorpay({
   key_id: process.env.RAZORPAY_KEY_ID,
@@ -398,6 +403,96 @@ const getCheckoutPage = async (req, res) => {
     }
   };
   
+
+  const downloadInvoice = async (req, res) => {
+    try {
+        const orderId = req.params.orderId;
+        const order = await Order.findById(orderId)
+        .populate(
+           {path: "orderedItems.product" }
+          );
+        if (!order) {
+            return res.status(404).send('Order not found');
+        }
+
+        const addressDoc = await Address.findOne({
+          "address._id": order.address // Match the subdocument `_id` field
+      });
+
+      if (!addressDoc) {
+        return res.status(404).send("Address not found");
+      } 
+
+      const address = addressDoc.address.find(
+        (addr) => addr._id.toString() === order.address.toString()
+    );
+
+    if (!address) {
+        return res.status(404).send("Address not found in address collection");
+    }
+        const data = {
+            "documentTitle": "INVOICE",
+            "currency": "INR",
+            "taxNotation": "gst",
+            "marginTop": 25,
+            "marginRight": 25,
+            "marginLeft": 25,
+            "marginBottom": 25,
+            apiKey: process.env.EASYINVOICE_API,
+            mode: "development",
+            images: {
+                logo: "https://mms.img.susercontent.com/id-11134216-7r98r-lykz64w40cfc14",
+            },
+            "sender": {
+                "company": "Men Side",
+                "address": "Mamala",
+                "zip": "682305",
+                "city": "Kochi",
+                "country": "India",
+            },
+            "client": {
+                "company": address.name,
+                "address": address.landMark + ", " + address.city,
+                "zip": address.pincode,
+                "city": address.state,
+                "country": "India"
+            },
+            "information": {
+                "number": order.orderId,
+                "date": format(new Date(order.createdOn), 'yyyy-MM-dd HH:mm:ss')
+            },
+            "products": order.orderedItems.map(prod => ({
+                "quantity": prod.quantity,
+                "description": prod.name || prod.title,
+                "tax": 0,
+                "price": prod.price,
+  
+            })),
+            "bottomNotice": "Thank you for your business",
+        };
+        console.log("Invoice creation started..");
+        console.log("EasyInvoice API Key:", process.env.EASYINVOICE_API);
+        console.log("Invoice Data:", JSON.stringify(data, null, 2));
+        const result = await easyinvoice.createInvoice(data);
+        console.log("result created");
+        const invoicePath = path.join(__dirname, "../../public/invoice/", `invoice_${orderId}.pdf`);
+        console.log("Invoice path made..")
+        console.log("Invoice path:", invoicePath);
+        fs.writeFileSync(invoicePath, result.pdf, 'base64');
+        console.log("Invoice saved to path..")
+        res.download(invoicePath, `invoice_${orderId}.pdf`, (err) => {
+            if (err) {
+                console.error("Error downloading the file", err);
+            }
+            fs.unlinkSync(invoicePath);
+        });
+    } catch (error) {
+        console.error(error);
+        res.status(500).send('An error occurred while generating the invoice');
+    }
+  };
+  
+  
   
 
   module.exports={
@@ -407,5 +502,6 @@ const getCheckoutPage = async (req, res) => {
     cancelOrder,
     paymentConfirm,
     verify,
+    downloadInvoice,
   }
   
