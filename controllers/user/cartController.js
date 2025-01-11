@@ -8,7 +8,14 @@ const getCartPage = async (req, res) => {
     const userId = req.session.user._id;
 
     // Fetch the user's cart
-    const cart = await Cart.findOne({ userId }).populate("items.productId");
+    const cart = await Cart.findOne({ userId })
+    .populate({path:"items.productId",
+      populate:{
+        path: "category",
+        model:"Category",
+        select: "name",
+      }
+    });
 
     if (!cart || cart.items.length === 0) {
       return res.render("cart", {
@@ -33,7 +40,7 @@ const getCartPage = async (req, res) => {
           productName: item.productId.productName,
           productImage: item.productId.productImage, // Images are arrays
           salePrice: item.productId.salePrice,
-          category: item.productId.category,
+          category: item.productId.category.name,
           brand: item.productId.brand,
           status: item.productId.status, // Check product availability
         },
