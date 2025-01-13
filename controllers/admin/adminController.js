@@ -1,4 +1,5 @@
 const User = require('../../models/userSchema');
+const Order = require('../../models/orderSchema');
 const mongoose = require('mongoose');
 const bcrypt = require('bcrypt');
 
@@ -39,7 +40,40 @@ const login = async(req,res) =>{
 const loadDashboard = async(req,res)=>{
     if(req.session.admin){
         try {
-            res.render('dashboard');
+            const userscount = await User.countDocuments();
+            const ordercount = await Order.countDocuments();
+            const totalFinalAmount = await Order.aggregate([
+                {
+                    $group: {
+                        _id: null,
+                        totalAmount: { $sum: "$finalAmount" }
+                    }
+                }
+            ]);
+            const ordersAmountSum = totalFinalAmount[0].totalAmount || 0;
+
+            //monthly orders
+            const monthlyOrders = await Order.aggregate([
+                {
+                    $group:{
+                        _id:{$month:"$createdOn"},
+                        count:{$sum:1}
+                    }
+                },
+                {
+                    $sort: { "_id": 1 }
+                }
+            ]);
+            const monthlyCounts = Array(12).fill(0);
+            monthlyOrders.forEach(item => {
+                monthlyCounts[item._id - 1] = item.count;
+            });
+            res.render('dashboard',{
+                userscount: userscount,
+                ordercount: ordercount,
+                ordersAmountSum: ordersAmountSum,
+                monthlyCounts:monthlyCounts,
+            });
         } catch (error) {
             res.redirect('/pageerror')
         }
