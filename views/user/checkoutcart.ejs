@@ -560,7 +560,8 @@
   }
 
   try {
-    const response = await fetch('/applyCoupon', {
+    console.log("routing to apply coupon");
+    const response = await fetch('/admin/applyCoupon', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ coupon: couponName, total: totalAmount }),
@@ -569,7 +570,7 @@
     const data = await response.json();
     if (data.success) {
       Swal.fire({ icon: 'success', title: 'Success', text: `Coupon Discount ${data.offerPrice} Applied` });
-      document.getElementById("totalValue").innerText = `₹${data.gt}`;
+      document.getElementById("totalValue").innerText = `₹${data.grantTotal}`;
       document.getElementById("discount").innerText = data.offerPrice;
       document.getElementById("inputCoupon").value = "";
       discount = data.offerPrice;
@@ -581,11 +582,8 @@
     Swal.fire({ icon: 'error', title: 'Error', text: 'Failed to apply coupon.' });
   }
 };
-
-
- 
     
-        var usedCoupon = null;
+    var usedCoupon = null;
     const useCoupon = async (couponName) =>{
         disableOtherCoupons(couponName);
         copyToClipboard(couponName);

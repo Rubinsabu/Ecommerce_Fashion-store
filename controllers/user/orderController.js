@@ -95,13 +95,17 @@ const getCheckoutPage = async (req, res) => {
 
       const gTotal = req.session.grandTotal;
       const today = new Date().toISOString();
+      console.log("Today:", new Date(today));
+      const sampleCoupon = await Coupon.findOne();
+      console.log("Sample coupon :",sampleCoupon);
       const findCoupons = await Coupon.find({
         isList: true,
         createdOn: { $lt: new Date(today) },
         expireOn: { $gt: new Date(today) },
         minimumPrice: { $lt: grandTotal[0].totalPrice },
       });
-      
+      console.log("Coupons here:",findCoupons);
+
       res.render("checkoutcart", {
           product: cartDetails,
           user: findUser,

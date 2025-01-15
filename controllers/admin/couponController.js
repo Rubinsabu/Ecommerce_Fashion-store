@@ -5,7 +5,7 @@ const loadCoupon = async(req,res) =>{
     try {
 
         const findCoupons = await Coupon.find({});
-        console.log("Coupon details: ",findCoupons);
+        
         return res.render("coupon",
             {coupons:findCoupons
             });
@@ -45,7 +45,7 @@ const editCoupon = async(req,res) =>{
     try {
         const id = req.query.id;
         const findCoupon = await Coupon.findOne({_id:id});
-        console.log("Fetched Coupon:", findCoupon);
+        
         res.render('edit-coupon',{
             findCoupon:findCoupon,
         })
@@ -56,15 +56,14 @@ const editCoupon = async(req,res) =>{
 
 const updateCoupon = async(req,res)=>{
     try {
-        console.log("starting updateCoupon");
+       
         couponId = req.body.couponId;
         const oid = new mongoose.Types.ObjectId(couponId);
         const selectedCoupon = await Coupon.findOne({_id:oid});
         if(selectedCoupon){
             const startDate = new Date(req.body.startDate);
             const endDate = new Date(req.body.endDate);
-            console.log("new Start Date:",startDate);
-            console.log("new End Date:",endDate);
+            
             const updateCoupon = await Coupon.updateOne(
                 {_id: oid},
                 {
@@ -81,7 +80,7 @@ const updateCoupon = async(req,res)=>{
             if(updateCoupon!=null){
                 res.send("Coupon updated successfully")
             }else{
-                res.status(500).send("Couon update failed")
+                res.status(500).send("Coupon update failed")
             }
         }
 
@@ -103,10 +102,46 @@ const deleteCoupon = async(req,res)=>{
     }
 }
 
+const applyCoupon = async(req,res)=>{
+    try {
+        console.log("apply coupon started..");
+        const name = req.body.coupon;
+        const total = req.body.total;
+        console.log("name:",name,"+ totalamount:",total);
+        const findCoupon = await Coupon.findOne({name: name});
+        if(findCoupon){
+            console.log("Coupon fetched",findCoupon);
+            const offerPrice = parseInt(findCoupon.offerPrice);
+            const grantTotal = parseInt(total - offerPrice);
+            console.log("offerPrice:",offerPrice);
+            console.log("grantTotal:",grantTotal);
+            res.status(200).json({
+                success: true,
+                offerPrice,
+                grantTotal,    
+            });    
+        }else{
+            res.status(404).json({
+                success: false,
+                message: 'Coupon not found or invalid.',
+            });
+        }
+        
+    } catch (error) {
+        console.error("Error applying Coupon",error);
+
+        res.status(500).json({
+            success: false,
+            message: 'Internal server error.',
+        });
+    }
+}
+
 module.exports = {
     loadCoupon,
     createCoupon,
     editCoupon,
     updateCoupon,
     deleteCoupon,
+    applyCoupon,
 }
