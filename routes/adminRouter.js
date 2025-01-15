@@ -7,6 +7,7 @@ const categoryController = require('../controllers/admin/categoryController');
 const productController = require('../controllers/admin/productController');
 const brandController = require('../controllers/admin/brandController');
 const orderController = require('../controllers/admin/orderController');
+const couponController = require('../controllers/admin/couponController');
 
 const multer = require("multer");
 const storage = require("../helpers/multer");
@@ -43,5 +44,13 @@ router.get("/products",adminAuth,productController.getAllProducts);
 router.get("/orderList", adminAuth, orderController.getOrderListPageAdmin);
 router.get("/orderDetailsAdmin", adminAuth, orderController.getOrderDetailsPageAdmin);
 router.post("/deliverOrder",adminAuth,orderController.deliverOrder);
+
+
+//Coupon management
+router.get("/coupon",adminAuth,couponController.loadCoupon);
+router.post("/createCoupon",adminAuth,couponController.createCoupon);
+router.get("/editCoupon",adminAuth,couponController.editCoupon);
+router.put("/updatecoupon",adminAuth,couponController.updateCoupon);
+router.get("/deletecoupon",adminAuth,couponController.deleteCoupon);
 
 module.exports = router;
