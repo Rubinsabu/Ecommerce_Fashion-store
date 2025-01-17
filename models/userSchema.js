@@ -46,10 +46,10 @@ const userSchema = new Schema({
             required: true,
         }
     }],
-    wallet : [{
+    wallet : {
         type: Number,
         default:0,
-    }],
+    },
     wishlist:[{
         type:Schema.Types.ObjectId,
         ref:"Wishlist"

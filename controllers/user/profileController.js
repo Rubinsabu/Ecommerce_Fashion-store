@@ -2,6 +2,7 @@ const User = require("../../models/userSchema");
 const Address = require('../../models/addressSchema');
 const Order = require('../../models/orderSchema');
 
+
 const userProfile = async (req,res)=>{
     try {
         const userId = req.session.user;
@@ -16,13 +17,15 @@ const userProfile = async (req,res)=>{
         const orderDetails = userData.orderHistory.sort((a, b) => {
             return new Date(b.createdOn) - new Date(a.createdOn);
         });
-
-        console.log('Order details : ',orderDetails);
+        console.log("userSchema details: ",userData);
+        console.log('razorpay key id : ',process.env.RAZORPAY_KEY_ID);
         
         res.render('profile',{
             user:userData,
             userAddress: addressData,
             orders: orderDetails,
+            razorpayKey: process.env.RAZORPAY_KEY_ID,
+
         });
 
     } catch (error) {

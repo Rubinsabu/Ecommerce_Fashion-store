@@ -6,6 +6,7 @@ const productController = require('../controllers/user/productController');
 const cartController = require('../controllers/user/cartController');
 const orderController = require('../controllers/user/orderController');
 const wishlistController = require('../controllers/user/wishlistController');
+const walletController = require('../controllers/user/walletController');
 const passport = require("passport");
 const { userAuth } = require("../middlewares/auth");
 
@@ -71,5 +72,10 @@ router.post('/paymentConfirm',userAuth,orderController.paymentConfirm);
 
 //download invoice
 router.get("/downloadInvoice/:orderId",userAuth,orderController.downloadInvoice);
+
+//wallet controller
+router.post("/addMoney",userAuth,walletController.addMoneyToWallet);
+router.post("/verify-payment",userAuth,walletController.verify_payment);
+
 
 module.exports = router;
