@@ -50,7 +50,7 @@ const loadDashboard = async(req,res)=>{
                     }
                 }
             ]);
-            const ordersAmountSum = totalFinalAmount[0].totalAmount || 0;
+            const ordersAmountSum = totalFinalAmount.length > 0 ? totalFinalAmount[0].totalAmount : 0;
 
             //monthly orders
             const monthlyOrders = await Order.aggregate([
