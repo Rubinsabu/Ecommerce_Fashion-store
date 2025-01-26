@@ -200,7 +200,7 @@
                       <div class="product-content-wrap">
                           <h6><%=products[i].productName%></h6>
                           <h5><%=products[i].salePrice%></h5>
-                          <a href="" onclick="addToCart('<%= products[i]._id %>')" >Add to cart</a>
+                          <a href="#" onclick=" event.preventDefault(); addToCart('<%= products[i]._id %>')" >Add to cart</a>
                       </div>
                   </div>
               </div>
@@ -210,7 +210,7 @@
 </section>
 <script>
     function addToCart(productId) {
-    
+    console.log("Entered addTocart");
     console.log("Product ID:", productId);
       fetch('/addToCart', {
         method: 'POST',
@@ -218,8 +218,16 @@
           'Content-Type': 'application/json',
         },
         body: JSON.stringify({ productId }),
+        credentials: 'include',
       })
-        .then((response) => response.json())
+      .then((response) => {
+        if (response.redirected) {
+            // If the response is a redirect, navigate to the login page
+            window.location.href = response.url;
+        } else {
+            return response.json(); // Parse the response as JSON
+        }
+        })
         .then((data) => {
           if (data.status === true) {
             alert('Product added to cart!');
